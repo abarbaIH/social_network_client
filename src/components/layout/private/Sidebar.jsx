@@ -24,7 +24,6 @@ const Sidebar = () => {
                             <div className="general-info__container-avatar">
                                 {auth.avatar != "default.png" && <img src={`${Global.url}user/avatar/${auth.avatar}`} className="container-avatar__img" alt="Foto de perfil" />}
                                 {auth.avatar == "default.png" && <img src={avatar} className="container-avatar__img" alt="Foto de perfil" />}
-
                             </div>
 
                             <div className="general-info__container-names">

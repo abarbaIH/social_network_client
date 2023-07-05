@@ -34,7 +34,6 @@ const Signup = () => {
             setUserSaved("error")
         }
 
-
     }
 
     return (
@@ -80,10 +79,9 @@ const Signup = () => {
 
                     <input type="submit" value="Registro" className="btn btn-success" />
 
+                </form >
 
-                </form>
-
-            </div>
+            </div >
         </>
     )
 }
