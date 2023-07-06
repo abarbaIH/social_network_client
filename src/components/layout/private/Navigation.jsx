@@ -38,14 +38,14 @@ const Navigation = () => {
             <ul className="container-lists__list-end">
 
                 <li className="list-end__item">
-                    <NavLink to="#" className="list-end__link-image">
+                    <NavLink to={`profile/${auth._id}`} className="list-end__link-image">
                         {auth.avatar != "default.png" && <img src={`${Global.url}user/avatar/${auth.avatar}`} className="list-end__img" alt="Foto de perfil" />}
                         {auth.avatar == "default.png" && <img src={avatar} className="list-end__img" alt="Foto de perfil" />}
                     </NavLink>
                 </li>
 
                 <li className="list-end__item">
-                    <NavLink to="#" className="list-end__link">
+                    <NavLink to={`profile/${auth._id}`} className="list-end__link">
                         <span className="list-end__name">{auth.nickName}</span>
                     </NavLink>
                 </li>

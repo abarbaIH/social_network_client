@@ -2,21 +2,21 @@ import React, { useEffect, useState } from "react";
 import { Global } from "../../helpers/Global";
 import { useParams } from "react-router-dom";
 import UserList from "../user/UserList";
-import useAuth from "../../hooks/useAuth";
+import { GetProfile } from "../../helpers/GetProfile";
 
 const Followers = () => {
 
-    const { auth } = useAuth()
     const [users, setUsers] = useState([])
     const [page, setPage] = useState(1)
     const [morePeople, setMorePeople] = useState(true)
     const [following, setFollowing] = useState([])
     const [loading, setLoading] = useState(true)
     const params = useParams()
-
+    const [userProfile, setUserProfile] = useState({})
 
     useEffect(() => {
         getUsers(1)
+        GetProfile(params.userId, setUserProfile)
     }, [])
 
     const getUsers = async (nextPage = 1) => { // la pagina por defecto debe ser 1
@@ -55,6 +55,7 @@ const Followers = () => {
             setUsers(newUsers)
             setFollowing(data.user_following)
             setLoading(false)
+
         }
 
         // Para que desaparezca el botón de ver mas personas
@@ -66,7 +67,7 @@ const Followers = () => {
     return (
         <>
             <header className="content__header">
-                <h1 className="content__title">Seguidores de {auth.nickName}</h1>
+                <h1 className="content__title">Seguidores de {userProfile.nickName}</h1>
             </header>
 
 

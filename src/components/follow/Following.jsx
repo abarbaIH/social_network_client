@@ -2,21 +2,21 @@ import React, { useEffect, useState } from "react";
 import { Global } from "../../helpers/Global";
 import { useParams } from "react-router-dom";
 import UserList from "../user/UserList";
-import useAuth from "../../hooks/useAuth";
+import { GetProfile } from "../../helpers/GetProfile";
 
 const Following = () => {
 
-    const { auth } = useAuth()
     const [users, setUsers] = useState([])
     const [page, setPage] = useState(1)
     const [morePeople, setMorePeople] = useState(true)
     const [following, setFollowing] = useState([])
     const [loading, setLoading] = useState(true)
     const params = useParams()
-
+    const [userProfile, setUserProfile] = useState({})
 
     useEffect(() => {
         getUsers(1)
+        GetProfile(params.userId, setUserProfile)
     }, [])
 
     const getUsers = async (nextPage = 1) => { // la pagina por defecto debe ser 1
@@ -56,20 +56,18 @@ const Following = () => {
             setFollowing(data.user_following)
             setLoading(false)
 
-            // Para que desaparezca el botón de ver mas personas
-            if (users.length >= (data.totalPages - data.users.length)) {
-                setMorePeople(false)
-            }
-
         }
 
-
+        // Para que desaparezca el botón de ver mas personas
+        if (users.length >= (data.totalPages - data.users.length)) {
+            setMorePeople(false)
+        }
     }
 
     return (
         <>
             <header className="content__header">
-                <h1 className="content__title">Usuarios seguidos por {auth.nickName}</h1>
+                <h1 className="content__title">Seguidos por {userProfile.nickName}</h1>
             </header>
 
 
