@@ -14,7 +14,6 @@ const Signup = () => {
 
         // metemos en una variable los datos del formulario
         const newUser = formData
-        // console.log(newUser)
 
         // guardar usuario con petición al backend
         // creamos una petición a la api y la guardamos en la constante

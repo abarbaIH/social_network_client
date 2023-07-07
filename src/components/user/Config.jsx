@@ -34,7 +34,6 @@ const Config = () => {
             setAuth(data.user)
             setUserSaved("saved")
 
-            console.log(auth)
         } else {
             setUserSaved("error")
         }

@@ -10,9 +10,11 @@ const Sidebar = () => {
     const { auth, userCounters } = useAuth() // nos traemos del hook useAuth el objeto auth y userCounters
     const { formData, changed } = useForm({}) // revisar el hook personalizado useForm
     const [publicationSaved, setPublicationSaved] = useState("not_sended")
+    const [alertForm, setAlertForm] = useState(true)
 
     const savePublication = async (e) => {
         e.preventDefault()
+        setAlertForm(true) // para que muestre o no mensaje de alerta
 
         // Recoger los datos del formulario
         const newPublication = formData
@@ -69,10 +71,17 @@ const Sidebar = () => {
                 setPublicationSaved("error")
 
             }
-            if (data.status == "success" && fileData.status == "success") {
-                document.querySelector("#publication-form").reset()
-            }
+            // if (data.status == "success" && fileData.status == "success") {
+            //     const myForm = document.querySelector("#publication-form")
+            //     myForm.reset()
+            // }
         }
+
+        setTimeout(() => {
+            const myForm = document.querySelector("#publication-form")
+            myForm.reset()
+            setAlertForm(false)
+        }, 1500)
 
     }
 
@@ -134,11 +143,11 @@ const Sidebar = () => {
 
                     <div className="aside__container-form">
 
-                        {publicationSaved == "saved" ?
-                            <strong className="alert alert-success"> Publicada correctamente!!</strong>
+                        {publicationSaved == "saved" && alertForm ?
+                            <strong id="#alert-form" className="alert alert-success"> Publicada correctamente!!</strong>
                             : ""}
-                        {publicationSaved == "error" ?
-                            <strong className="alert alert-danger"> No se ha podido subir la publicación</strong>
+                        {publicationSaved == "error" && alertForm ?
+                            <strong id="#alert-form" className="alert alert-danger"> No se ha podido subir la publicación</strong>
                             : ""}
 
                         <form id="publication-form" className="container-form__form-post" onSubmit={savePublication}>

@@ -4,6 +4,7 @@ import { GetProfile } from "../../helpers/GetProfile";
 import { Link, useParams } from "react-router-dom";
 import { Global } from "../../helpers/Global";
 import useAuth from "../../hooks/useAuth";
+import PublicationList from "../publication/PublicationList";
 
 const Profile = () => {
 
@@ -11,16 +12,22 @@ const Profile = () => {
     const [user, setUser] = useState({})
     const params = useParams()
     const [iFollow, setIFollow] = useState(false)
+    const [publications, setPublications] = useState([])
+    const [page, setPage] = useState(1)
     const [counters, setCounters] = useState({})
+    const [morePublications, setMorePublications] = useState(true)
 
     useEffect(() => {
         getDataUser()
         getCounters()
+        getPublications(1, true) // le pasamos el newUser a true, de forma que cuando se carga el componente lo pone en true
     }, [])
 
     useEffect(() => {
         getDataUser()
         getCounters()
+        setMorePublications(true) // cuando se cambie de user, cambiamos este estado para que se muestre el boton
+        getPublications(1, true) // le pasamos el newUser a true, de forma que cuando se modifica el perfil, newUser sea true y se renueven las publicaciones
     }, [params])
 
     const getDataUser = async () => {
@@ -41,14 +48,12 @@ const Profile = () => {
         })
 
         const data = await request.json()
-
         console.log(data)
 
         if (data) {
             setCounters(data)
         }
     }
-
 
     const follow = async (userId) => {
 
@@ -89,6 +94,44 @@ const Profile = () => {
         }
     }
 
+    const getPublications = async (nextPage = 1, newProfile = false) => {
+        const request = await fetch(`${Global.url}publication/userPublicationList/${params.userId}/${nextPage}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": localStorage.getItem("token")
+            }
+        })
+
+        const data = await request.json()
+
+        console.log(data)
+
+        if (data.status == "success") {
+
+            let newPublications = data.publicacionList
+
+            if (!newProfile && publications.length >= 1) { // lo del newProfile es para saber si has entrado a un perfil nuevo o no
+                newPublications = [...publications, ...data.publicacionList]
+            }
+
+            if (newProfile == true) {
+                newPublications = data.publicacionList // si hay un newUser, lo que hacemos es resetear la publicaciones de nuevo
+                setMorePublications(true) // para que nos vuelva a mostrar el boton 
+                setPage(1) // actualizamos la pagina a 1 cuando haya un nuevo usuario
+            }
+
+            setPublications(newPublications)
+
+            if (!newProfile && publications.length >= (data.totalPages - data.publicacionList.length)) { // analizamos también si no es un nuevo perfil
+                setMorePublications(false)
+            }
+
+            if (data.totalPages <= 1) {
+                setMorePublications(false)
+            }
+        }
+    }
 
     return (
         <>
@@ -147,53 +190,14 @@ const Profile = () => {
                 </div>
             </header>
 
+            <PublicationList
+                publications={publications}
+                getPublications={getPublications}
+                setPage={setPage}
+                page={page}
+                morePublications={morePublications}
+                setMorePublications={setMorePublications} />
 
-
-            <div className="content__posts">
-
-                <article className="posts__post">
-
-                    <div className="post__container">
-
-                        <div className="post__image-user">
-                            <a href="#" className="post__image-link">
-                                <img src={avatar} className="post__user-image" alt="Foto de perfil" />
-                            </a>
-                        </div>
-
-                        <div className="post__body">
-
-                            <div className="post__user-info">
-                                <a href="#" className="user-info__name">Victor Robles</a>
-                                <span className="user-info__divider"> | </span>
-                                <a href="#" className="user-info__create-date">Hace 1 hora</a>
-                            </div>
-
-                            <h4 className="post__content">Hola, buenos dias.</h4>
-
-                        </div>
-
-                    </div>
-
-                    <div className="post__buttons">
-
-                        <a href="#" className="post__button">
-                            <i className="fa-solid fa-trash-can"></i>
-                        </a>
-
-                    </div>
-
-                </article>
-
-
-
-            </div>
-
-            <div className="content__container-btn">
-                <button className="content__btn-more-post">
-                    Ver mas publicaciones
-                </button>
-            </div>
         </>
 
     )

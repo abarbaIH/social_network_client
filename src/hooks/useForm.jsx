@@ -10,7 +10,6 @@ const useForm = (initObject) => {
 
         setFormData({ ...formData, [name]: value }) // aquí lo que hacemos es conformar el objeto de user con los datos que se meten en cada campo con onchange
         // básicamente es añadir name:value (xej firstName: Alvaro) en cada cambio realizado, sacando una copia de lo anterior con el spreadoperator
-        // console.log(formData)
     }
 
     return {

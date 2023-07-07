@@ -53,7 +53,6 @@ export const AuthProvider = ({ children }) => {
         // Devolver todos los datos de los counters
 
         const dataCounters = await counterRequest.json()
-        // console.log(dataCounters)
 
         // Setear el auth
         setAuth(data.user)
